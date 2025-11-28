@@ -18,6 +18,7 @@
             color: #1a1a1a;
             line-height: 1.6;
             padding: 20px;
+            overflow-x: hidden;
         }
 
         .container {
@@ -27,6 +28,8 @@
             border: 2px solid #1a1a1a;
             padding: 40px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            overflow-x: hidden;
         }
 
         h1 {
@@ -213,17 +216,31 @@
 
         .date-input {
             width: 100%;
+            max-width: 100%;
             padding: 16px 20px;
             border: 2px solid #1a1a1a;
             font-size: 16px;
             font-family: inherit;
             margin-bottom: 20px;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .date-input:focus {
             outline: none;
             border-color: #1a1a1a;
             background: #f9f9f9;
+        }
+
+        /* Исправление для iOS */
+        @supports (-webkit-touch-callout: none) {
+            .date-input {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                -webkit-appearance: none;
+            }
         }
 
         .date-submit {
@@ -247,6 +264,7 @@
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
+                overflow-x: hidden;
             }
 
             .score-display {
@@ -263,6 +281,15 @@
 
             .question-text {
                 font-size: 18px;
+            }
+
+            .date-input {
+                width: 100%;
+                max-width: 100%;
+                padding: 14px 16px;
+                font-size: 16px;
+                box-sizing: border-box;
+                -webkit-appearance: none;
             }
         }
     </style>

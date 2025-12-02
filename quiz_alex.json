@@ -94,25 +94,25 @@
                     "id": "6.2a.1",
                     "text": "Я рано ушёл из дома",
                     "points": 2,
-                    "nextQuestion": "8"
+                    "nextQuestion": "6.1.1"
                 },
                 {
                     "id": "6.2a.2",
                     "text": "Один из родителей сирота",
                     "points": 3,
-                    "nextQuestion": "8"
+                    "nextQuestion": "6.1.1"
                 },
                 {
                     "id": "6.2a.3",
                     "text": "Бабушка/мама не общались с семьёй бывшего мужа",
                     "points": 3,
-                    "nextQuestion": "8"
+                    "nextQuestion": "6.1.1"
                 },
                 {
                     "id": "6.2a.4",
                     "text": "Ничего не рассказывали, потому что все плохо жили",
                     "points": 4,
-                    "nextQuestion": "8"
+                    "nextQuestion": "6.1.1"
                 }
             ]
         },
@@ -123,25 +123,25 @@
                     "id": "6.3a.1",
                     "text": "Мать — сирота",
                     "points": 3,
-                    "nextQuestion": "8"
+                    "nextQuestion": "6.1.1"
                 },
                 {
                     "id": "6.3a.2",
                     "text": "Я вырос в неполной семье",
                     "points": 3,
-                    "nextQuestion": "8"
+                    "nextQuestion": "6.1.1"
                 },
                 {
                     "id": "6.3a.3",
                     "text": "Я сирота, была приёмная семья",
                     "points": 4,
-                    "nextQuestion": "8"
+                    "nextQuestion": "6.1.1"
                 },
                 {
                     "id": "6.3a.4",
                     "text": "Я сирота, вырос в интернате",
                     "points": 5,
-                    "nextQuestion": "8"
+                    "nextQuestion": "6.1.1"
                 }
             ]
         },
@@ -162,7 +162,7 @@
                 },
                 {
                     "id": "6.1.1.3",
-                    "text": "Да",
+                    "text": "Да, предсказывали и гадали",
                     "points": 3,
                     "nextQuestion": "6.1.1.3"
                 }

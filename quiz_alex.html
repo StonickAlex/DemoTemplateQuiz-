@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Квиз: Диагностика</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 2px solid #1a1a1a;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 3px solid #1a1a1a;
+            padding-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .quiz-section {
+            display: none;
+        }
+
+        .quiz-section.active {
+            display: block;
+        }
+
+        .question {
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #1a1a1a;
+        }
+
+        .question-number {
+            font-size: 12px;
+            font-weight: 400;
+            color: #666;
+            margin-left: 8px;
+            opacity: 0.7;
+        }
+
+        .answer-info {
+            font-size: 11px;
+            color: #666;
+            margin-top: 6px;
+            opacity: 0.8;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .answer-points {
+            display: inline-block;
+            margin-right: 12px;
+            font-weight: 600;
+        }
+
+        .answer-next {
+            display: inline-block;
+        }
+
+        .answers {
+            list-style: none;
+        }
+
+        .answer-item {
+            margin-bottom: 12px;
+        }
+
+        .answer-button {
+            width: 100%;
+            padding: 16px 20px;
+            background: #ffffff;
+            border: 2px solid #1a1a1a;
+            font-size: 16px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: #1a1a1a;
+        }
+
+        .answer-button>div:first-child {
+            margin-bottom: 6px;
+        }
+
+        .answer-button:hover {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .answer-button:hover .answer-info {
+            color: #cccccc;
+        }
+
+        .answer-button:hover .question-number {
+            color: #cccccc;
+        }
+
+        .answer-button:active {
+            transform: scale(0.98);
+        }
+
+        .score-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #1a1a1a;
+            color: #ffffff;
+            padding: 12px 20px;
+            border: 2px solid #1a1a1a;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            margin-bottom: 30px;
+            border: 1px solid #1a1a1a;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #1a1a1a;
+            transition: width 0.3s;
+        }
+
+        .results {
+            text-align: center;
+        }
+
+        .results-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #1a1a1a;
+            padding-bottom: 15px;
+        }
+
+        .results-score {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 30px 0;
+            color: #1a1a1a;
+        }
+
+        .results-level {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #1a1a1a;
+        }
+
+        .results-description {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border: 1px solid #1a1a1a;
+        }
+
+        .restart-button {
+            margin-top: 30px;
+            padding: 14px 30px;
+            background: #1a1a1a;
+            color: #ffffff;
+            border: 2px solid #1a1a1a;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .restart-button:hover {
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+
+        .date-input {
+            width: 100%;
+            max-width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #1a1a1a;
+            font-size: 16px;
+            font-family: inherit;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .date-input:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            background: #f9f9f9;
+        }
+
+        /* Исправление для iOS */
+        @supports (-webkit-touch-callout: none) {
+            .date-input {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                -webkit-appearance: none;
+            }
+        }
+
+        .date-submit {
+            width: 100%;
+            padding: 16px 20px;
+            background: #1a1a1a;
+            color: #ffffff;
+            border: 2px solid #1a1a1a;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .date-submit:hover {
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                overflow-x: hidden;
+            }
+
+            .score-display {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+                display: inline-block;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .question-text {
+                font-size: 18px;
+            }
+
+            .date-input {
+                width: 100%;
+                max-width: 100%;
+                padding: 14px 16px;
+                font-size: 16px;
+                box-sizing: border-box;
+                -webkit-appearance: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="score-display" id="scoreDisplay">Баллы: 0</div>
+
+    <div class="container">
+        <h1 id="quizTitle">Диагностика</h1>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+
+        <div id="quizContent">
+            <!-- Контент квиза будет здесь -->
+        </div>
+    </div>
+
+    <script>
+        let quizData = null;
+        let currentQuestionId = null;
+        let totalScore = 0;
+        let answeredQuestions = 0;
+        let totalMainQuestions = 12; // Основных вопросов: 1, 2, 4, 6, 8, 9, 10, 11, 13, 16, 17, 18
+
+        // Загружаем данные квиза
+        async function loadQuiz() {
+            try {
+                const response = await fetch('quiz_alex.json');
+                quizData = await response.json();
+                // Если есть title в JSON, используем его, иначе оставляем дефолтный
+                if (quizData.title) {
+                    document.getElementById('quizTitle').textContent = quizData.title;
+                }
+                startQuiz();
+            } catch (error) {
+                console.error('Ошибка загрузки квиза:', error);
+                document.getElementById('quizContent').innerHTML =
+                    '<p style="color: #d32f2f;">Ошибка загрузки данных квиза. Убедитесь, что файл quiz_alex.json находится в той же папке.</p>';
+            }
+        }
+
+        function startQuiz() {
+            currentQuestionId = quizData.startQuestion;
+            showQuestion(currentQuestionId);
+        }
+
+        function showQuestion(questionId) {
+            if (!questionId || questionId === 'RESULTS' || questionId === 'РЕЗУЛЬТАТЫ') {
+                showResults();
+                return;
+            }
+
+            const question = quizData.questions[questionId];
+            if (!question) {
+                showResults();
+                return;
+            }
+
+            const isMainQuestion = /^\d+$/.test(questionId);
+            if (isMainQuestion) {
+                answeredQuestions++;
+                updateProgress();
+            }
+
+            let html = '<div class="quiz-section active">';
+            html += `<div class="question">`;
+            html += `<div class="question-text">${question.text}<span class="question-number">[${question.id}]</span></div>`;
+
+            // Специальная обработка для вопроса 1 (дата рождения)
+            if (questionId === '1') {
+                const answer = question.answers[0];
+                const nextQ = answer.nextQuestion || 'RESULTS';
+                const pointsText = answer.points > 0 ? `+${answer.points}` : answer.points === 0 ? '0' : `${answer.points}`;
+                const nextQText = nextQ === 'RESULTS' ? 'РЕЗУЛЬТАТЫ' : nextQ;
+                html += '<input type="date" class="date-input" id="birthDate" required>';
+                html += '<button class="date-submit" onclick="handleDateSubmit()">Продолжить</button>';
+                html += `<div class="answer-info" style="margin-top: 10px; padding: 10px; background: #f9f9f9; border: 1px solid #1a1a1a;">`;
+                html += `<span class="question-number">[${answer.id}]</span> `;
+                html += `<span class="answer-points">${pointsText} баллов</span> `;
+                html += `<span class="answer-next">→ ${nextQText}</span>`;
+                html += `</div>`;
+            } else {
+                html += '<ul class="answers">';
+                question.answers.forEach(answer => {
+                    const nextQ = answer.nextQuestion || 'RESULTS';
+                    const pointsText = answer.points > 0 ? `+${answer.points}` : answer.points === 0 ? '0' : `${answer.points}`;
+                    const nextQText = nextQ === 'RESULTS' ? 'РЕЗУЛЬТАТЫ' : nextQ;
+                    html += `<li class="answer-item">`;
+                    html += `<button class="answer-button" onclick="selectAnswer('${answer.id}', ${answer.points}, '${nextQ}')">`;
+                    html += `<div>${answer.text} <span class="question-number">[${answer.id}]</span></div>`;
+                    html += `<div class="answer-info">`;
+                    html += `<span class="answer-points">${pointsText} баллов</span>`;
+                    html += `<span class="answer-next">→ ${nextQText}</span>`;
+                    html += `</div>`;
+                    html += `</button>`;
+                    html += `</li>`;
+                });
+                html += '</ul>';
+            }
+
+            html += `</div></div>`;
+
+            document.getElementById('quizContent').innerHTML = html;
+        }
+
+        function handleDateSubmit() {
+            const dateInput = document.getElementById('birthDate');
+            if (!dateInput.value) {
+                alert('Пожалуйста, укажите дату рождения');
+                return;
+            }
+            selectAnswer('1.1', 0, '2');
+        }
+
+        function selectAnswer(answerId, points, nextQuestionId) {
+            totalScore += points;
+            updateScore();
+
+            // Небольшая задержка для визуального эффекта
+            setTimeout(() => {
+                if (nextQuestionId && nextQuestionId.trim() !== '') {
+                    showQuestion(nextQuestionId);
+                } else {
+                    showResults();
+                }
+            }, 200);
+        }
+
+        function updateScore() {
+            document.getElementById('scoreDisplay').textContent = `Баллы: ${totalScore}`;
+        }
+
+        function updateProgress() {
+            const progress = (answeredQuestions / totalMainQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function showResults() {
+            // Простое отображение результатов, так как в JSON нет структуры results
+            let html = '<div class="quiz-section active">';
+            html += '<div class="results">';
+            html += '<div class="results-title">Ваш результат</div>';
+            html += `<div class="results-score">${totalScore} баллов</div>`;
+            html += `<div class="results-level">Квиз завершен</div>`;
+            html += `<div class="results-description">Вы ответили на все вопросы. Ваш результат: ${totalScore} баллов.</div>`;
+            html += '<button class="restart-button" onclick="restartQuiz()">Пройти заново</button>';
+            html += '</div>';
+            html += '</div>';
+
+            document.getElementById('quizContent').innerHTML = html;
+            document.getElementById('progressFill').style.width = '100%';
+        }
+
+        function restartQuiz() {
+            totalScore = 0;
+            answeredQuestions = 0;
+            currentQuestionId = quizData.startQuestion;
+            updateScore();
+            updateProgress();
+            showQuestion(currentQuestionId);
+        }
+
+        // Запускаем квиз при загрузке страницы
+        loadQuiz();
+    </script>
+</body>
+
+</html>
+
+

@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Квиз: Диагностика отношений</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 2px solid #1a1a1a;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 3px solid #1a1a1a;
+            padding-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .quiz-section {
+            display: none;
+        }
+
+        .quiz-section.active {
+            display: block;
+        }
+
+        .question {
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #1a1a1a;
+            white-space: pre-line;
+        }
+
+        .info-text {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 4px solid #1a1a1a;
+            white-space: pre-line;
+        }
+
+        .question-number {
+            font-size: 12px;
+            font-weight: 400;
+            color: #666;
+            margin-left: 8px;
+            opacity: 0.7;
+        }
+
+        .answer-info {
+            font-size: 11px;
+            color: #666;
+            margin-top: 6px;
+            opacity: 0.8;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .answer-points {
+            display: inline-block;
+            margin-right: 12px;
+            font-weight: 600;
+        }
+
+        .answer-next {
+            display: inline-block;
+        }
+
+        .answers {
+            list-style: none;
+        }
+
+        .answer-item {
+            margin-bottom: 12px;
+        }
+
+        .answer-button {
+            width: 100%;
+            padding: 16px 20px;
+            background: #ffffff;
+            border: 2px solid #1a1a1a;
+            font-size: 16px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: #1a1a1a;
+        }
+
+        .answer-button>div:first-child {
+            margin-bottom: 6px;
+        }
+
+        .answer-button:hover {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .answer-button:hover .answer-info {
+            color: #cccccc;
+        }
+
+        .answer-button:hover .question-number {
+            color: #cccccc;
+        }
+
+        .answer-button:active {
+            transform: scale(0.98);
+        }
+
+        .info-button {
+            width: 100%;
+            padding: 16px 20px;
+            background: #1a1a1a;
+            color: #ffffff;
+            border: 2px solid #1a1a1a;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            margin-top: 20px;
+        }
+
+        .info-button:hover {
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+
+        .score-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #1a1a1a;
+            color: #ffffff;
+            padding: 12px 20px;
+            border: 2px solid #1a1a1a;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            margin-bottom: 30px;
+            border: 1px solid #1a1a1a;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #1a1a1a;
+            transition: width 0.3s;
+        }
+
+        .results {
+            text-align: center;
+        }
+
+        .results-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #1a1a1a;
+            padding-bottom: 15px;
+        }
+
+        .results-score {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 30px 0;
+            color: #1a1a1a;
+        }
+
+        .results-level {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #1a1a1a;
+        }
+
+        .results-description {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border: 1px solid #1a1a1a;
+            text-align: left;
+            white-space: pre-line;
+        }
+
+        .restart-button {
+            margin-top: 30px;
+            padding: 14px 30px;
+            background: #1a1a1a;
+            color: #ffffff;
+            border: 2px solid #1a1a1a;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .restart-button:hover {
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+
+        .date-input {
+            width: 100%;
+            max-width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #1a1a1a;
+            font-size: 16px;
+            font-family: inherit;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .date-input:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            background: #f9f9f9;
+        }
+
+        .date-submit {
+            width: 100%;
+            padding: 16px 20px;
+            background: #1a1a1a;
+            color: #ffffff;
+            border: 2px solid #1a1a1a;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .date-submit:hover {
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+
+        textarea.date-input {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        input[type="range"].date-input {
+            padding: 0;
+            height: 8px;
+            background: #e0e0e0;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        input[type="range"].date-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #1a1a1a;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        input[type="range"].date-input::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #1a1a1a;
+            cursor: pointer;
+            border-radius: 50%;
+            border: none;
+        }
+
+        select.date-input {
+            cursor: pointer;
+        }
+
+        .form-redirect {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .form-redirect-text {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            white-space: pre-line;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                overflow-x: hidden;
+            }
+
+            .score-display {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+                display: inline-block;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .question-text {
+                font-size: 18px;
+            }
+
+            .info-text {
+                font-size: 16px;
+            }
+
+            .date-input {
+                width: 100%;
+                max-width: 100%;
+                padding: 14px 16px;
+                font-size: 16px;
+                box-sizing: border-box;
+                -webkit-appearance: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="score-display" id="scoreDisplay" style="display: none;">Баллы: 0</div>
+
+    <div class="container">
+        <div style="text-align: right; margin-bottom: 10px;">
+            <a href="index.html" style="color: #666; text-decoration: none; font-size: 14px;">← Вернуться к выбору квиза</a>
+        </div>
+        <h1 id="quizTitle">Диагностика отношений</h1>
+        <div style="text-align: center; margin-bottom: 20px; color: #666; font-size: 14px;">
+            <span style="background: #f0f0f0; padding: 4px 8px; border-radius: 3px;">V-REL-01</span>
+            <span style="margin: 0 10px;">→</span>
+            <span style="background: #f0f0f0; padding: 4px 8px; border-radius: 3px; color: #999;">I-REL-01</span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+
+        <div id="quizContent">
+            <p style="text-align: center; padding: 40px; color: #666;">Загрузка квиза...</p>
+        </div>
+    </div>
+
+    <script>
+        let quizData = null;
+        let currentQuestionId = null;
+        let totalScore = 0;
+        let answeredQuestions = 0;
+        let totalMainQuestions = 8;
+        let userAnswers = {};
+        let currentBranch = null;
+
+        async function loadQuiz() {
+            try {
+                const response = await fetch('./V-REL-01-quiz-diagnostika-otnoshenii-v2.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                quizData = await response.json();
+                if (quizData.title) {
+                    document.getElementById('quizTitle').textContent = quizData.title;
+                }
+                startQuiz();
+            } catch (error) {
+                document.getElementById('quizContent').innerHTML =
+                    '<p style="color: #d32f2f; padding: 20px;">Ошибка загрузки данных квиза. Убедитесь, что файл V-REL-01-quiz-diagnostika-otnoshenii-v2.json находится в той же папке.<br><br>Ошибка: ' + error.message + '</p>';
+            }
+        }
+
+        function startQuiz() {
+            if (!quizData || !quizData.startQuestion) {
+                document.getElementById('quizContent').innerHTML =
+                    '<p style="color: #d32f2f; padding: 20px;">Ошибка: данные квиза не загружены или некорректны.</p>';
+                return;
+            }
+            currentQuestionId = quizData.startQuestion;
+            showQuestion(currentQuestionId);
+        }
+
+        function showQuestion(questionId) {
+            if (!questionId || questionId === 'RESULTS' || questionId === 'РЕЗУЛЬТАТЫ' || questionId === 'end') {
+                showResults();
+                return;
+            }
+
+            if (questionId === 'FORM_REQUIRED') {
+                showResults();
+                return;
+            }
+
+            if (questionId === 'BRANCH_Q4') {
+                questionId = getBranchQuestionId('Q4');
+            }
+
+            const question = quizData.questions[questionId];
+            if (!question) {
+                document.getElementById('quizContent').innerHTML =
+                    '<p style="color: #d32f2f; padding: 20px;">Ошибка: вопрос "' + questionId + '" не найден в данных квиза.</p>';
+                return;
+            }
+
+            if (question.type === 'question' && questionId.startsWith('Q')) {
+                answeredQuestions++;
+                updateProgress();
+            }
+
+            let html = '<div class="quiz-section active">';
+            html += `<div class="question">`;
+
+            if (question.type === 'info') {
+                html += `<div class="info-text">${question.text}</div>`;
+                html += `<button class="info-button" onclick="handleInfoContinue('${question.answers[0].nextQuestion}')">Продолжить</button>`;
+            } else if (question.type === 'date_form') {
+                html += `<div class="question-text">${question.text}</div>`;
+                html += '<label style="display: block; margin-bottom: 15px; font-weight: 600;">Ваша дата рождения:</label>';
+                html += '<input type="date" class="date-input" id="userBirthDate" required>';
+
+                if (question.hasPartnerOption) {
+                    html += '<div style="margin: 20px 0;">';
+                    html += '<label style="display: block; margin-bottom: 10px; font-weight: 600;">Есть ли у вас партнёр?</label>';
+                    html += '<div style="margin-bottom: 15px;">';
+                    html += '<label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">';
+                    html += '<input type="radio" name="hasPartner" value="yes" id="hasPartnerYes" style="margin-right: 10px; cursor: pointer;" onchange="togglePartnerDate(true)">';
+                    html += '<span>Да, есть партнёр</span>';
+                    html += '</label>';
+                    html += '<label style="display: flex; align-items: center; cursor: pointer;">';
+                    html += '<input type="radio" name="hasPartner" value="no" id="hasPartnerNo" style="margin-right: 10px; cursor: pointer;" onchange="togglePartnerDate(false)">';
+                    html += '<span>Нет партнёра / не знаю</span>';
+                    html += '</label>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '<div id="partnerDateContainer" style="display: none;">';
+                    html += '<label style="display: block; margin-bottom: 10px; font-weight: 600;">Дата рождения партнёра:</label>';
+                    html += '<input type="date" class="date-input" id="partnerBirthDate">';
+                    html += '</div>';
+                } else {
+                    html += '<label style="display: block; margin-top: 20px; margin-bottom: 10px; font-weight: 600;">Дата рождения партнёра (опционально):</label>';
+                    html += '<input type="date" class="date-input" id="partnerBirthDate">';
+                }
+
+                html += '<button class="date-submit" onclick="handleDateSubmit()">Продолжить</button>';
+            } else {
+                html += `<div class="question-text">${question.text}<span class="question-number">[${question.id}]</span></div>`;
+                html += '<ul class="answers">';
+                question.answers.forEach(answer => {
+                    const nextQ = answer.nextQuestion || 'RESULTS';
+                    const pointsText = answer.points > 0 ? `+${answer.points}` : answer.points === 0 ? '0' : `${answer.points}`;
+                    const nextQText = nextQ === 'RESULTS' ? 'РЕЗУЛЬТАТЫ' : nextQ;
+                    html += `<li class="answer-item">`;
+                    html += `<button class="answer-button" onclick="selectAnswer('${answer.id}', ${answer.points}, '${nextQ}', '${questionId}')">`;
+                    html += `<div>${answer.text} <span class="question-number">[${answer.id}]</span></div>`;
+                    html += `<div class="answer-info">`;
+                    html += `<span class="answer-points">${pointsText} баллов</span>`;
+                    html += `<span class="answer-next">→ ${nextQText}</span>`;
+                    html += `</div>`;
+                    html += `</button>`;
+                    html += `</li>`;
+                });
+                html += '</ul>';
+            }
+
+            html += `</div></div>`;
+
+            const contentDiv = document.getElementById('quizContent');
+            if (contentDiv) {
+                contentDiv.innerHTML = html;
+            }
+        }
+
+        function selectAnswer(answerId, points, nextQuestionId, questionId) {
+            userAnswers[questionId] = answerId;
+            const question = quizData.questions[questionId];
+            if (question && question.answers) {
+                const answer = question.answers.find(a => a.id === answerId);
+                if (answer && answer.branch) {
+                    currentBranch = answer.branch;
+                }
+            }
+
+            totalScore += points;
+            updateScore();
+
+            setTimeout(() => {
+                if (nextQuestionId && nextQuestionId.trim() !== '' && nextQuestionId !== 'end') {
+                    showQuestion(nextQuestionId);
+                } else {
+                    showResults();
+                }
+            }, 200);
+        }
+
+        function handleInfoContinue(nextQuestionId) {
+            setTimeout(() => {
+                showQuestion(nextQuestionId);
+            }, 200);
+        }
+
+        function togglePartnerDate(show) {
+            const container = document.getElementById('partnerDateContainer');
+            const partnerDateInput = document.getElementById('partnerBirthDate');
+            if (container) {
+                container.style.display = show ? 'block' : 'none';
+                if (!show && partnerDateInput) {
+                    partnerDateInput.value = '';
+                }
+            }
+        }
+
+        function handleDateSubmit() {
+            const userDate = document.getElementById('userBirthDate');
+            if (!userDate.value) {
+                alert('Пожалуйста, укажите вашу дату рождения');
+                return;
+            }
+
+            userAnswers['userBirthDate'] = userDate.value;
+
+            const hasPartnerYes = document.getElementById('hasPartnerYes');
+            const hasPartnerNo = document.getElementById('hasPartnerNo');
+            let hasPartner = false;
+
+            if (hasPartnerYes && hasPartnerYes.checked) {
+                hasPartner = true;
+                const partnerDate = document.getElementById('partnerBirthDate');
+                if (partnerDate && partnerDate.value) {
+                    userAnswers['partnerBirthDate'] = partnerDate.value;
+                } else {
+                    alert('Пожалуйста, укажите дату рождения партнёра');
+                    return;
+                }
+            } else if (hasPartnerNo && hasPartnerNo.checked) {
+                hasPartner = false;
+                userAnswers['partnerBirthDate'] = null;
+            } else {
+
+                const partnerDate = document.getElementById('partnerBirthDate');
+                if (partnerDate && partnerDate.value) {
+                    hasPartner = true;
+                    userAnswers['partnerBirthDate'] = partnerDate.value;
+                } else {
+                    hasPartner = false;
+                    userAnswers['partnerBirthDate'] = null;
+                }
+            }
+
+            userAnswers['hasPartner'] = hasPartner;
+
+            const question = quizData.questions['Q7_DATES'];
+            if (question && question.answers[0]) {
+                selectAnswer(question.answers[0].id, 0, question.answers[0].nextQuestion, 'Q7_DATES');
+            }
+        }
+
+        function getBranchQuestionId(baseId) {
+            if (!currentBranch) return baseId;
+            const branchMap = {
+                'R-LOVE-TRUST': 'Q4_L',
+                'R-CONFLICT': 'Q4_C',
+                'R-ALONE': 'Q4_A'
+            };
+            return branchMap[currentBranch] || baseId;
+        }
+
+        function showFormRedirect() {
+            showResults();
+        }
+
+        function showForm() {
+            showResults();
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            showResults();
+        }
+
+        function updateScore() {
+
+        }
+
+        function updateProgress() {
+            const progress = (answeredQuestions / totalMainQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function determineResult() {
+
+            const mapping = quizData.resultMapping;
+            const q4Id = getBranchQuestionId('Q4');
+            const q4Answer = userAnswers[q4Id];
+            const q3Answer = userAnswers['Q3'];
+
+            let hasQ3A3 = (q3Answer === 'Q3_A3');
+
+            if (mapping.R1 && currentBranch === 'R-CONFLICT') {
+                for (let condition of mapping.R1.conditions) {
+                    if (condition.branch === currentBranch && condition.q4) {
+                        if (q4Answer && condition.q4.includes(q4Answer)) {
+                            return 'R1';
+                        }
+                    }
+                }
+            }
+
+            if (mapping.R2 && currentBranch === 'R-LOVE-TRUST') {
+                for (let condition of mapping.R2.conditions) {
+                    if (condition.branch === currentBranch && condition.q4) {
+                        if (q4Answer && condition.q4.includes(q4Answer)) {
+                            return 'R2';
+                        }
+                    }
+                }
+            }
+
+            if (mapping.R3 && currentBranch === 'R-ALONE') {
+                for (let condition of mapping.R3.conditions) {
+                    if (condition.branch === currentBranch && condition.q4) {
+                        if (q4Answer && condition.q4.includes(q4Answer)) {
+                            return 'R3';
+                        }
+                    }
+                }
+            }
+
+            if (mapping.R4) {
+
+                for (let condition of mapping.R4.conditions) {
+
+                    if (condition.branch && condition.q4) {
+                        if (condition.branch === currentBranch &&
+                            q4Answer && condition.q4.includes(q4Answer)) {
+                            return 'R4';
+                        }
+                    }
+                }
+
+                if (hasQ3A3) {
+                    return 'R4';
+                }
+            }
+
+            return 'R4';
+        }
+
+        function showResults() {
+            const resultId = determineResult();
+            const result = quizData.results[resultId];
+
+            let html = '<div class="quiz-section active">';
+            html += '<div class="results">';
+            html += '<div class="results-title">Ваш результат</div>';
+
+            if (result) {
+                html += `<div class="results-level">${result.title}</div>`;
+                html += `<div class="results-description">${result.description}</div>`;
+            } else {
+                html += `<div class="results-level">Квиз завершен</div>`;
+                html += `<div class="results-description">Вы ответили на все вопросы.</div>`;
+            }
+
+            html += '<div style="margin-top: 30px; padding: 20px; background: #f9f9f9; border: 1px solid #1a1a1a; text-align: left;">';
+            html += '<div style="font-weight: 600; margin-bottom: 10px;">Следующие шаги:</div>';
+            html += '<div style="font-size: 14px; line-height: 1.6;">';
+            html += 'Для более глубокой диагностики рекомендуем пройти: <strong>I-REL-01</strong> — Глубокая диагностика отношений';
+            html += '</div>';
+            html += '<button class="restart-button" onclick="openNextQuiz(\'I-REL-01\')" style="margin-top: 15px; width: auto; display: inline-block;">Перейти к I-REL-01</button>';
+            html += '</div>';
+
+            html += '<div style="margin-top: 20px;">';
+            html += '<button class="restart-button" onclick="restartQuiz()">Пройти заново</button>';
+            html += '<button class="restart-button" onclick="window.location.href=\'index.html\'" style="margin-left: 10px; background: #666;">Вернуться к выбору квиза</button>';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+
+            document.getElementById('quizContent').innerHTML = html;
+            document.getElementById('progressFill').style.width = '100%';
+        }
+
+        function openNextQuiz(quizId) {
+
+            alert(`Квиз ${quizId} пока не готов. Мы работаем над его созданием.`);
+        }
+
+        function restartQuiz() {
+            totalScore = 0;
+            answeredQuestions = 0;
+            userAnswers = {};
+            currentBranch = null;
+            currentQuestionId = quizData.startQuestion;
+            updateScore();
+            updateProgress();
+            showQuestion(currentQuestionId);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadQuiz);
+        } else {
+            loadQuiz();
+        }
+    </script>
+</body>
+
+</html>

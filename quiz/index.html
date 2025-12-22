@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Экосистема квизов</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 2px solid #1a1a1a;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+            border-bottom: 3px solid #1a1a1a;
+            padding-bottom: 20px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .quiz-category {
+            margin-bottom: 50px;
+        }
+
+        .category-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a1a1a;
+            color: #1a1a1a;
+        }
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .quiz-card {
+            border: 2px solid #1a1a1a;
+            padding: 20px;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .quiz-card:hover {
+            background: #1a1a1a;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-code {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .quiz-card:hover .quiz-code {
+            color: #cccccc;
+        }
+
+        .quiz-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .quiz-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .quiz-card:hover .quiz-description {
+            color: #cccccc;
+        }
+
+        .quiz-chain {
+            font-size: 12px;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+            color: #999;
+        }
+
+        .quiz-card:hover .quiz-chain {
+            border-top-color: #444;
+            color: #cccccc;
+        }
+
+        .chain-arrow {
+            margin: 0 5px;
+            color: #999;
+        }
+
+        .quiz-card:hover .chain-arrow {
+            color: #cccccc;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: #4caf50;
+            color: white;
+            border-radius: 3px;
+        }
+
+        .status-badge.pending {
+            background: #ff9800;
+        }
+
+        .status-badge.not-started {
+            background: #9e9e9e;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .quiz-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Экосистема квизов</h1>
+        <p class="subtitle">Выберите квиз для прохождения</p>
+
+        <div class="quiz-category">
+            <h2 class="category-title">Отношения</h2>
+            <div class="quiz-grid">
+                <div class="quiz-card" onclick="openQuiz('V-REL-01')">
+                    <span class="status-badge">Готов</span>
+                    <div class="quiz-code">V-REL-01</div>
+                    <div class="quiz-name">Диагностика отношений</div>
+                    <div class="quiz-description">
+                        Охлаждение, недоверие/измена, токсичные конфликты, одиночество/роль «запасного варианта»
+                    </div>
+                    <div class="quiz-chain">
+                        Ведёт в <span class="chain-arrow">→</span> I-REL-01
+                    </div>
+                </div>
+
+                <div class="quiz-card" onclick="openQuiz('V-REL-02')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">V-REL-02</div>
+                    <div class="quiz-name">Совместимость и будущее пары по дате рождения</div>
+                    <div class="quiz-description">
+                        Брак, пара без брака, качели, симпатия
+                    </div>
+                    <div class="quiz-chain">
+                        Ведёт в <span class="chain-arrow">→</span> I-REL-01
+                    </div>
+                </div>
+
+                <div class="quiz-card" onclick="openQuiz('V-REL-03')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">V-REL-03</div>
+                    <div class="quiz-name">Вернётся ли бывший / стоит ли ждать?</div>
+                    <div class="quiz-description">
+                        Нет контакта, on/off, контакт без статуса, новые отношения + «хвост»
+                    </div>
+                    <div class="quiz-chain">
+                        Ведёт в <span class="chain-arrow">→</span> I-REL-01
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quiz-category">
+            <h2 class="category-title">Негатив / дом</h2>
+            <div class="quiz-grid">
+                <div class="quiz-card" onclick="openQuiz('V-NEG-01')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">V-NEG-01</div>
+                    <div class="quiz-name">Есть ли на мне негатив: сглаз, порча или просто усталость?</div>
+                    <div class="quiz-description">
+                        Выгорание, бытовой сглаз, вероятная порча, родовой узел
+                    </div>
+                    <div class="quiz-chain">
+                        Ведёт в <span class="chain-arrow">→</span> I-NEG-01
+                    </div>
+                </div>
+
+                <div class="quiz-card" onclick="openQuiz('V-NEG-02')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">V-NEG-02</div>
+                    <div class="quiz-name">Диагностика дома и окружения</div>
+                    <div class="quiz-description">
+                        Тяжёлая атмосфера, дети/животные как индикатор, поломки/ЧП, дом как точка события/рода
+                    </div>
+                    <div class="quiz-chain">
+                        Ведёт в <span class="chain-arrow">→</span> I-NEG-01 <span class="chain-arrow">/</span> I-FAM-01
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quiz-category">
+            <h2 class="category-title">Деньги</h2>
+            <div class="quiz-grid">
+                <div class="quiz-card" onclick="openQuiz('V-MNY-01')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">V-MNY-01</div>
+                    <div class="quiz-name">Денежные блоки: почему деньги приходят и уходят?</div>
+                    <div class="quiz-description">
+                        Переработка и недооценённость, деньги-качели, финансовый спасатель, страх больших денег
+                    </div>
+                    <div class="quiz-chain">
+                        Ведёт в <span class="chain-arrow">→</span> I-MNY-01
+                    </div>
+                </div>
+
+                <div class="quiz-card" onclick="openQuiz('V-MNY-02')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">V-MNY-02</div>
+                    <div class="quiz-name">Прогноз по деньгам и карьере (3–12 месяцев)</div>
+                    <div class="quiz-description">
+                        Найм, бизнес, фриланс, поиск
+                    </div>
+                    <div class="quiz-chain">
+                        Ведёт в <span class="chain-arrow">→</span> I-MNY-01 <span class="chain-arrow">/</span> I-PUR-01
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quiz-category">
+            <h2 class="category-title">Прогноз и желания</h2>
+            <div class="quiz-grid">
+                <div class="quiz-card" onclick="openQuiz('V-PRG-01')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">V-PRG-01</div>
+                    <div class="quiz-name">Личный прогноз на ближайшие 3 месяца</div>
+                    <div class="quiz-description">
+                        Отношения, деньги, здоровье, самореализация
+                    </div>
+                    <div class="quiz-chain">
+                        Ведёт в <span class="chain-arrow">→</span> I-REL-01 <span class="chain-arrow">/</span> I-MNY-01 <span class="chain-arrow">/</span> I-HLT-01 <span class="chain-arrow">/</span> I-PUR-01
+                    </div>
+                </div>
+
+                <div class="quiz-card" onclick="openQuiz('V-DES-01')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">V-DES-01</div>
+                    <div class="quiz-name">Почему желания не исполняются?</div>
+                    <div class="quiz-description">
+                        Чужие желания, разброс, страх получения, родовой/магический стоп
+                    </div>
+                    <div class="quiz-chain">
+                        Ведёт в <span class="chain-arrow">→</span> I-PUR-01 <span class="chain-arrow">/</span> I-MNY-01 <span class="chain-arrow">/</span> I-NEG-01
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="quiz-category">
+            <h2 class="category-title">Внутренние квизы (для углублённой диагностики)</h2>
+            <div class="quiz-grid">
+                <div class="quiz-card" onclick="openQuiz('I-REL-01')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">I-REL-01</div>
+                    <div class="quiz-name">Глубокая диагностика отношений</div>
+                    <div class="quiz-description">
+                        История, длительность, род, что уже делали, готовность к формату работы
+                    </div>
+                </div>
+
+                <div class="quiz-card" onclick="openQuiz('I-NEG-01')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">I-NEG-01</div>
+                    <div class="quiz-name">Глубокая диагностика негатива и защиты</div>
+                    <div class="quiz-description">
+                        История, длительность, род, что уже делали, готовность к формату работы
+                    </div>
+                </div>
+
+                <div class="quiz-card" onclick="openQuiz('I-MNY-01')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">I-MNY-01</div>
+                    <div class="quiz-name">Глубокая диагностика денег</div>
+                    <div class="quiz-description">
+                        История, длительность, род, что уже делали, готовность к формату работы
+                    </div>
+                </div>
+
+                <div class="quiz-card" onclick="openQuiz('I-HLT-01')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">I-HLT-01</div>
+                    <div class="quiz-name">Глубокая диагностика здоровья/энергии</div>
+                    <div class="quiz-description">
+                        История, длительность, род, что уже делали, готовность к формату работы
+                    </div>
+                </div>
+
+                <div class="quiz-card" onclick="openQuiz('I-FAM-01')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">I-FAM-01</div>
+                    <div class="quiz-name">Глубокая диагностика детей/рода</div>
+                    <div class="quiz-description">
+                        История, длительность, род, что уже делали, готовность к формату работы
+                    </div>
+                </div>
+
+                <div class="quiz-card" onclick="openQuiz('I-PUR-01')">
+                    <span class="status-badge not-started">Не готов</span>
+                    <div class="quiz-code">I-PUR-01</div>
+                    <div class="quiz-name">Глубокая диагностика предназначения</div>
+                    <div class="quiz-description">
+                        История, длительность, род, что уже делали, готовность к формату работы
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quizFiles = {
+            'V-REL-01': 'V-REL-01-quiz-diagnostika-otnoshenii-v2.html',
+            'V-REL-02': null,
+            'V-REL-03': null,
+            'V-NEG-01': null,
+            'V-NEG-02': null,
+            'V-MNY-01': null,
+            'V-MNY-02': null,
+            'V-PRG-01': null,
+            'V-DES-01': null,
+            'I-REL-01': null,
+            'I-NEG-01': null,
+            'I-MNY-01': null,
+            'I-HLT-01': null,
+            'I-FAM-01': null,
+            'I-PUR-01': null
+        };
+
+        function openQuiz(quizId) {
+            const file = quizFiles[quizId];
+            if (file) {
+                window.location.href = file;
+            } else {
+                alert(`Квиз ${quizId} пока не готов. Выберите другой квиз.`);
+            }
+        }
+
+        function showQuizChain(quizId) {
+            const chains = {
+                'V-REL-01': ['I-REL-01'],
+                'V-REL-02': ['I-REL-01'],
+                'V-REL-03': ['I-REL-01'],
+                'V-NEG-01': ['I-NEG-01'],
+                'V-NEG-02': ['I-NEG-01', 'I-FAM-01'],
+                'V-MNY-01': ['I-MNY-01'],
+                'V-MNY-02': ['I-MNY-01', 'I-PUR-01'],
+                'V-PRG-01': ['I-REL-01', 'I-MNY-01', 'I-HLT-01', 'I-PUR-01'],
+                'V-DES-01': ['I-PUR-01', 'I-MNY-01', 'I-NEG-01']
+            };
+            return chains[quizId] || [];
+        }
+    </script>
+</body>
+
+</html>

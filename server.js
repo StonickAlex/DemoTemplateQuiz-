@@ -4,20 +4,14 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Отдаем статические файлы из текущей директории
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(__dirname));
 
-// Главная страница - quiz.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'quiz_alex.html'));
-});
-
-// Fallback для всех остальных маршрутов
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'quiz_alex.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(PORT, () => {
-    console.log(`Сервер запущен на порту ${PORT}`);
-    console.log(`Откройте http://localhost:${PORT} в браузере`);
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`Open http://localhost:${PORT} in your browser`);
 });
+

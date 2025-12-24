@@ -465,6 +465,28 @@
             if (question.type === 'info') {
                 html += `<div class="info-text">${question.text}</div>`;
                 html += `<button class="info-button" onclick="handleInfoContinue('${question.answers[0].nextQuestion}')">Продолжить</button>`;
+            } else if (question.type === 'info_branch') {
+                let branchInfo = null;
+                if (currentBranch && question.branchTexts && question.branchTexts[currentBranch]) {
+                    branchInfo = question.branchTexts[currentBranch];
+                } else if (question.branchTexts) {
+                    const firstBranch = Object.keys(question.branchTexts)[0];
+                    branchInfo = question.branchTexts[firstBranch];
+                }
+
+                if (branchInfo) {
+                    html += `<div class="info-text">`;
+                    if (branchInfo.title) {
+                        html += `<h2 style="font-size: 24px; font-weight: 700; margin-bottom: 15px; text-align: center;">${branchInfo.title}</h2>`;
+                    }
+                    if (branchInfo.text) {
+                        html += `<div style="white-space: pre-line; line-height: 1.8;">${branchInfo.text}</div>`;
+                    }
+                    html += `</div>`;
+                } else {
+                    html += `<div class="info-text">${question.text || 'Продолжаем...'}</div>`;
+                }
+                html += `<button class="info-button" onclick="handleInfoContinue('${question.answers[0].nextQuestion}')">${question.answers[0].text || 'Продолжить'}</button>`;
             } else if (question.type === 'date_form') {
                 html += `<div class="question-text">${question.text}</div>`;
                 html += '<label style="display: block; margin-bottom: 15px; font-weight: 600;">Ваша дата рождения:</label>';

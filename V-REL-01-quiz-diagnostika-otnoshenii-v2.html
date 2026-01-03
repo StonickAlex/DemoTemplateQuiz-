@@ -368,6 +368,8 @@
                 font-size: 16px;
                 box-sizing: border-box;
                 -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
             }
         }
     </style>
@@ -467,9 +469,29 @@
                 html += `<button class="info-button" onclick="handleInfoContinue('${question.answers[0].nextQuestion}')">Продолжить</button>`;
             } else if (question.type === 'info_branch') {
                 let branchInfo = null;
-                if (currentBranch && question.branchTexts && question.branchTexts[currentBranch]) {
-                    branchInfo = question.branchTexts[currentBranch];
-                } else if (question.branchTexts) {
+
+                if (questionId === 'INF1') {
+                    const q1Answer = userAnswers['Q1'];
+                    let targetBranch = null;
+
+                    if (q1Answer === 'Q1_A1' || q1Answer === 'Q1_A2') {
+                        targetBranch = 'R-LOVE-TRUST';
+                    } else if (q1Answer === 'Q1_A3') {
+                        targetBranch = 'R-CONFLICT';
+                    } else if (q1Answer === 'Q1_A0' || q1Answer === 'Q1_A4') {
+                        targetBranch = 'R-ALONE';
+                    }
+
+                    if (targetBranch && question.branchTexts && question.branchTexts[targetBranch]) {
+                        branchInfo = question.branchTexts[targetBranch];
+                    }
+                } else {
+                    if (currentBranch && question.branchTexts && question.branchTexts[currentBranch]) {
+                        branchInfo = question.branchTexts[currentBranch];
+                    }
+                }
+
+                if (!branchInfo && question.branchTexts) {
                     const firstBranch = Object.keys(question.branchTexts)[0];
                     branchInfo = question.branchTexts[firstBranch];
                 }
@@ -661,58 +683,60 @@
         }
 
         function determineResult() {
-
             const mapping = quizData.resultMapping;
+            const q1Answer = userAnswers['Q1'];
+            const q3Answer = userAnswers['Q3'];
             const q4Id = getBranchQuestionId('Q4');
             const q4Answer = userAnswers[q4Id];
-            const q3Answer = userAnswers['Q3'];
 
-            let hasQ3A3 = (q3Answer === 'Q3_A3');
+            function checkCondition(condition) {
+                if (condition.q1) {
+                    const q1Match = Array.isArray(condition.q1) ?
+                        condition.q1.includes(q1Answer) :
+                        condition.q1 === q1Answer;
+                    if (!q1Match) return false;
+                }
 
-            if (mapping.R1 && currentBranch === 'R-CONFLICT') {
+                if (condition.q3) {
+                    if (condition.q3 !== q3Answer) return false;
+                }
+
+                if (condition.q4) {
+                    if (!q4Answer || !condition.q4.includes(q4Answer)) return false;
+                }
+
+                return true;
+            }
+
+            if (mapping.R1) {
                 for (let condition of mapping.R1.conditions) {
-                    if (condition.branch === currentBranch && condition.q4) {
-                        if (q4Answer && condition.q4.includes(q4Answer)) {
-                            return 'R1';
-                        }
+                    if (checkCondition(condition)) {
+                        return 'R1';
                     }
                 }
             }
 
-            if (mapping.R2 && currentBranch === 'R-LOVE-TRUST') {
+            if (mapping.R2) {
                 for (let condition of mapping.R2.conditions) {
-                    if (condition.branch === currentBranch && condition.q4) {
-                        if (q4Answer && condition.q4.includes(q4Answer)) {
-                            return 'R2';
-                        }
+                    if (checkCondition(condition)) {
+                        return 'R2';
                     }
                 }
             }
 
-            if (mapping.R3 && currentBranch === 'R-ALONE') {
+            if (mapping.R3) {
                 for (let condition of mapping.R3.conditions) {
-                    if (condition.branch === currentBranch && condition.q4) {
-                        if (q4Answer && condition.q4.includes(q4Answer)) {
-                            return 'R3';
-                        }
+                    if (checkCondition(condition)) {
+                        return 'R3';
                     }
                 }
             }
 
             if (mapping.R4) {
-
                 for (let condition of mapping.R4.conditions) {
-
-                    if (condition.branch && condition.q4) {
-                        if (condition.branch === currentBranch &&
-                            q4Answer && condition.q4.includes(q4Answer)) {
-                            return 'R4';
-                        }
+                    if (checkCondition(condition)) {
+                        return 'R4';
                     }
-                }
-
-                if (hasQ3A3) {
-                    return 'R4';
                 }
             }
 
